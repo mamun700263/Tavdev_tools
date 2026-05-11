@@ -51,16 +51,10 @@ def task_status(
     
 @router.get('/bulk')
 def google_map_scraper_bulk(
-    topic:str = Query(
-        ...,
-        description="What are you looking for?",
-        example="Cafes",
-    
-    ),
     places:str= Query(
         ...,
         description="where are you looking for? enter the city names comma separated",
-        example="london manchester dhaka tokeyo",
+        example="london, manchester, dhaka, tokeyo",
     
     ),
     target:str= Query(
@@ -73,16 +67,12 @@ def google_map_scraper_bulk(
     
     places = places.split(',')
     data = []
-    print(target    )
     for place in places:
-        task = run_scraper.delay(f'{topic} in {place}',f'{place}.csv')
-
-        # time.sleep(2)
+        task = run_scraper.delay(f'{target} in {place}')
         k = {
             'place':place,
             'task_id':task.id
         }
-        print(k)
         data.append(k)
     FileSaver.save(data,'data_test2/bulk.json')
 
