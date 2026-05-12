@@ -58,7 +58,7 @@ class Account(Base):
     signup_user_agent = Column(Text, nullable=True)
     last_login_user_agent = Column(Text, nullable=True)
 
-    # multi-tenant (optional)
+    # multi-tenant
     # tenant_id = Column(PG_UUID(as_uuid=True), nullable=True, index=True)
 
     created_at = Column(
