@@ -1,11 +1,11 @@
 import uuid
 
-
-from sqlalchemy import JSON,Column
-from sqlalchemy import ForeignKey,String
+from sqlalchemy import JSON, Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
+
 from app.db import Base
+
 # -------- role-specific profile tables (thin, extendable) --------
 
 

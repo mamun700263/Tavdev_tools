@@ -1,7 +1,14 @@
-from .account import Account, RoleEnum, AccountStatus
+# app/accounts/models/__init__.py
+from .account import Account, AccountStatus, RoleEnum
 from .admin import AdminProfile
-from .user_profile import UserProfile
 from .company_profile import CompanyProfile
-__all__ = ['Account', 'RoleEnum', 'AccountStatus', 'AdminProfile', 'UserProfile','CompanyProfile']
+from .user_profile import UserProfile
 
-ALL_MODELS = [Account, AdminProfile, UserProfile, CompanyProfile, RoleEnum, AccountStatus]
+__all__ = [
+    "Account",
+    "RoleEnum",
+    "AccountStatus",
+    "AdminProfile",
+    "UserProfile",
+    "CompanyProfile",
+]

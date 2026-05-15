@@ -40,7 +40,7 @@ async def extract_card(card: str):
     try:
         type_of_place = await spans[0].text_content()
     except:
-        type_of_place="N/A"
+        type_of_place = "N/A"
 
     if spans:
         address = await extract_address(spans, 0)

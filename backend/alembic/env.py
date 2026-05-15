@@ -5,6 +5,7 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Import your Base and all models
@@ -13,10 +14,7 @@ from app.accounts.models import *
 
 # this is the Alembic Config object
 config = context.config
-config.set_main_option(
-    "sqlalchemy.url",
-    os.getenv("DATABASE_URL")
-)
+config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 
 # Logging
 if config.config_file_name is not None:

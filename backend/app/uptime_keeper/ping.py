@@ -1,5 +1,6 @@
 import httpx
 
+
 async def ping(url: str):
     try:
         async with httpx.AsyncClient() as client:
@@ -9,4 +10,3 @@ async def ping(url: str):
     except Exception as e:
         print(f"Failed {url} → {e}", flush=True)
         return {"url": url, "status": "down", "reason": str(e)}
-

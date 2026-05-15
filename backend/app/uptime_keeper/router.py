@@ -1,13 +1,14 @@
+from fastapi import APIRouter, Query
+
 from .ping import ping
-from fastapi import Query
-from fastapi import APIRouter
+
 router = APIRouter()
+
 
 @router.get(
     "/test-ping",
     summary="check health of  a URL",
     description="Checks whether a given URL is reachable and returns the response time. Useful for uptime monitoring or pre-scrape health checks.",
-    tags=["Utilities"],
 )
 async def test_ping(
     url: str = Query(

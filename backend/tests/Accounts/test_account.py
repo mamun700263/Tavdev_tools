@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from app.db import Base
 from app.accounts.models import Account, RoleEnum, AccountStatus
 
+
 @pytest.fixture(scope="function")
 def db_session():
     engine = create_engine("sqlite:///:memory:", echo=False)
@@ -13,6 +14,7 @@ def db_session():
     session = TestingSessionLocal()
     yield session
     session.close()
+
 
 def test_create_account(db_session):
     acc = Account(email="test@example.com", role=RoleEnum.USER)
@@ -25,6 +27,7 @@ def test_create_account(db_session):
     assert fetched.is_verified is False
     assert fetched.created_at is not None
     assert fetched.updated_at is not None
+
 
 def test_update_account_status(db_session):
     acc = Account(email="update@example.com", role=RoleEnum.USER)

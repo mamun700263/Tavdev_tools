@@ -1,11 +1,12 @@
 import uuid
 
-from sqlalchemy import JSON, Boolean, Column
-from sqlalchemy import ForeignKey, Index
+from sqlalchemy import JSON, Boolean, Column, ForeignKey, Index
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
-from .account import Account
+
 from app.db import Base
+
+from .account import Account
 
 
 class AdminProfile(Base):

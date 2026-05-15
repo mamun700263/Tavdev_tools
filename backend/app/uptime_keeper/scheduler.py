@@ -1,14 +1,17 @@
 import asyncio
+
 from .ping import ping
 
-URLS =[
+URLS = [
     # "https://bestoolify-tools-background-tasks.onrender.com/",
     "https://narayanpur-high-school.onrender.com/",
-    "https://online-school-1wkk.onrender.com/", 
+    "https://online-school-1wkk.onrender.com/",
     "https://bestoolify-tools.onrender.com",
     "https://alphabot-aal9.onrender.com/",
     "https://google.com",
 ]
+
+
 async def scheduler():
     while True:
         print("--- pinging all urls ---", flush=True)

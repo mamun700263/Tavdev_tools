@@ -1,13 +1,16 @@
-from fastapi import APIRouter
 from celery.result import AsyncResult
+from fastapi import APIRouter
+
 from app.core.celery import celery_app
-
-
 from app.core.data_exporters import FileSaver
+
 router = APIRouter()
 
+import io
+
+import pandas as pd
 from fastapi.responses import StreamingResponse
-import io, pandas as pd
+
 
 @router.get("/save_as/{task_id}")
 def download_result(task_id: str, format: str = "csv"):
@@ -43,9 +46,9 @@ def download_result(task_id: str, format: str = "csv"):
         return StreamingResponse(
             buffer,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers=headers
+            headers=headers,
         )
-    
+
 
 # @router.get("/csv/{task_id}")
 # def download_csv(task_id: str,name_of_file):
@@ -54,7 +57,7 @@ def download_result(task_id: str, format: str = "csv"):
 #         return {"status": "done", "result": task_result.result}
 #     else:
 #         return {"status": "pending"}
-    
+
 # @router.get("/json/{task_id}")
 # def download_json(task_id: str):
 #     task_result = AsyncResult(task_id, app=celery_app)
@@ -71,14 +74,17 @@ def download_result(task_id: str, format: str = "csv"):
 #         return {"status": "done", "result": task_result.result}
 #     else:
 #         return {"status": "pending"}
-    
+
 
 @router.get("/api/{task_id}")
 def download_api(task_id: str):
     pass
+
+
 @router.get("/db/{task_id}")
 def download_db(task_id: str):
     pass
+
 
 @router.get("/sheet/{task_id}")
 def download_sheet(task_id: str):
