@@ -1,4 +1,9 @@
 from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from app.db import get_db
+from app.uptime_keeper import crud, schemas
 
 from .ping import ping
 
@@ -26,3 +31,52 @@ async def test_ping(
     """
     result = await ping(url)
     return result
+
+
+
+
+# ------------------------
+# MONITORS
+# ------------------------
+
+@router.post("/monitors", response_model=schemas.UptimeMonitorOut)
+def create_monitor(payload: schemas.UptimeMonitorCreate, db: Session = Depends(get_db)):
+    return crud.create_monitor(db, payload)
+
+
+@router.get("/monitors/{monitor_id}", response_model=schemas.UptimeMonitorOut)
+def get_monitor(monitor_id, db: Session = Depends(get_db)):
+    obj = crud.get_monitor(db, monitor_id)
+    if not obj:
+        raise HTTPException(status_code=404, detail="Monitor not found")
+    return obj
+
+
+@router.get("/accounts/{account_id}/monitors", response_model=list[schemas.UptimeMonitorOut])
+def list_monitors(account_id, db: Session = Depends(get_db)):
+    return crud.get_monitors_by_account(db, account_id)
+
+
+@router.patch("/monitors/{monitor_id}", response_model=schemas.UptimeMonitorOut)
+def update_monitor(monitor_id, payload: schemas.UptimeMonitorUpdate, db: Session = Depends(get_db)):
+    obj = crud.update_monitor(db, monitor_id, payload)
+    if not obj:
+        raise HTTPException(status_code=404, detail="Monitor not found")
+    return obj
+
+
+@router.delete("/monitors/{monitor_id}")
+def delete_monitor(monitor_id, db: Session = Depends(get_db)):
+    obj = crud.delete_monitor(db, monitor_id)
+    if not obj:
+        raise HTTPException(status_code=404, detail="Monitor not found")
+    return {"deleted": True}
+
+
+# ------------------------
+# PINGS
+# ------------------------
+
+@router.get("/monitors/{monitor_id}/pings", response_model=list[schemas.UptimePingOut])
+def list_pings(monitor_id, db: Session = Depends(get_db)):
+    return crud.get_pings_by_monitor(db, monitor_id)

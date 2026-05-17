@@ -9,7 +9,7 @@ from sqlalchemy import ForeignKey, Index, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 
-from app.db import Base
+from app.db.base import Base
 
 
 class CompanyProfile(Base):

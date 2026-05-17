@@ -4,7 +4,7 @@ from sqlalchemy import JSON, Boolean, Column, ForeignKey, Index
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 
-from app.db import Base
+from app.db.base import Base
 
 from .account import Account
 

@@ -9,9 +9,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Import your Base and all models
-from app.db.base import Base
-from app.accounts.models import *
-
+from app.db.base  import Base
+import app.accounts.models
+import app.uptime_keeper.models
 # this is the Alembic Config object
 config = context.config
 config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
