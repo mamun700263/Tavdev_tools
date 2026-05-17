@@ -22,8 +22,10 @@ router = APIRouter()
 
 
 @router.post("/register", response_model=AccountResponse)
-def register(data: AccountCreate, db: Session = Depends(get_db)):
-    return crud.create_account(db, data)
+async def register(data: AccountCreate, db: Session = Depends(get_db)):
+    account = crud.create_account(db, data)
+    await crud.send_email_verification(db, account)
+    return account
 
 
 @router.post("/login")
@@ -59,7 +61,30 @@ def refresh(data: TokenRefresh, db: Session = Depends(get_db)):
         "token_type": "bearer",
     }
 
+from app.accounts.schemas.account import PasswordResetRequest
 
+
+# ── EMAIL VERIFICATION ────────────────────────────────────
+
+
+@router.post("/verify/send")
+async def send_verification(
+    data: PasswordResetRequest,  # reusing this schema — it only needs email
+    db: Session = Depends(get_db),
+):
+    account = crud.get_account_by_email(db, data.email)
+
+    if account.is_verified:
+        raise HTTPException(status_code=400, detail="Account already verified")
+
+    await crud.send_email_verification(db, account)
+    return {"message": "Verification email sent"}
+
+
+@router.get("/verify/{token}")
+def verify_email(token: str, db: Session = Depends(get_db)):
+    account = crud.verify_email_token(db, token)
+    return {"message": "Email verified successfully", "email": account.email}
 # ── ACCOUNT — ME (must be before /{account_id}) ──────────
 
 

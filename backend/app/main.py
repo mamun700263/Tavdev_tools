@@ -21,6 +21,16 @@ app = FastAPI(
     redoc_url=None,
     lifespan=lifespan
 )
+from fastapi.middleware.cors import CORSMiddleware
+
+# add this after app = FastAPI(...)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(
     google_map_scrapper_router, prefix="/google_map_scrapper", tags=["Scraper"]
