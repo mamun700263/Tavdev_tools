@@ -18,7 +18,7 @@ conf = ConnectionConfig(
 async def send_verification_email(email: str, token: str):
     # this will be the link the user clicks
     base_url = os.getenv("BASE_URL", "http://localhost:8000")
-    verify_url = f"{base_url}/accounts/verify/{token}"
+    verify_url = f"{base_url}/verify?token={token}"
 
     body = f"""
     <h2>Verify your email</h2>
