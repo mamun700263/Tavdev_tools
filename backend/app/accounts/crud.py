@@ -12,6 +12,47 @@ from app.accounts.schemas import AccountCreate
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+import secrets
+from datetime import datetime, timedelta, timezone
+from app.core.email.email import send_verification_email
+
+
+async def send_email_verification(db: Session, account: Account):
+    # 1. generate a secure random token
+    token = secrets.token_urlsafe(64)
+    expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
+
+    # 2. save token to account
+    account.verification_token = token
+    account.verification_expires_at = expires_at
+    db.commit()
+
+    # 3. send the email
+    await send_verification_email(account.email, token)
+
+
+def verify_email_token(db: Session, token: str) -> Account:
+    # 1. find account with this token
+    account = db.query(Account).filter(
+        Account.verification_token == token
+    ).first()
+
+    if not account:
+        raise HTTPException(status_code=400, detail="Invalid verification token")
+
+    # 2. check expiry
+    if account.verification_expires_at < datetime.now(timezone.utc):
+        raise HTTPException(status_code=400, detail="Verification token has expired")
+
+    # 3. activate the account
+    account.is_verified = True
+    account.status = AccountStatus.ACTIVE
+    account.verification_token = None
+    account.verification_expires_at = None
+    db.commit()
+    db.refresh(account)
+    return account
+
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
