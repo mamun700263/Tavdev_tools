@@ -27,7 +27,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://bestoolify-tools.onrender.com/"
+        "https://bestoolify-tools.onrender.com/",
+        "https://monitor.tavdev.com/",
         ],
     allow_credentials=True,
     allow_methods=["*"],
