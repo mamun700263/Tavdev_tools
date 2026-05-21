@@ -5,7 +5,7 @@ resend.api_key = os.getenv("RESEND_API_KEY")
 
 
 async def send_verification_email(email: str, token: str):
-    base_url = os.getenv("BASE_URL", "http://localhost:3000")
+    base_url = os.getenv("BASE_URL")
     verify_url = f"{base_url}/verify?token={token}"
 
     params = {

@@ -1,5 +1,3 @@
-# app/accounts/dependencies.py
-
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
