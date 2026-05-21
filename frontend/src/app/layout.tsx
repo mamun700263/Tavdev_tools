@@ -12,9 +12,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
   title: "TavDev Monitor",
   description: "An uptime keeper by TavDev",
+  icons:{
+    icon:"/favicon.png",
+  }
 };
 
 export default function RootLayout({
