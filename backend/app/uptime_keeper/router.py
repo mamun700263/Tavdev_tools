@@ -51,6 +51,9 @@ def get_monitor(monitor_id, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Monitor not found")
     return obj
 
+@router.get("/motinor_count/", response_model=int)
+def get_monitor_count(db:Session=Depends(get_db)):
+    return crud.count_monitors(db)
 
 @router.get("/accounts/{account_id}/monitors", response_model=list[schemas.UptimeMonitorOut])
 def list_monitors(account_id, db: Session = Depends(get_db)):

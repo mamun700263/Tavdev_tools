@@ -15,6 +15,8 @@ def create_monitor(db: Session, data: schemas.UptimeMonitorCreate):
     db.refresh(obj)
     return obj
 
+def count_monitors(db: Session):
+    return db.query(models.UptimeMonitor).count()
 
 def get_monitor(db: Session, monitor_id):
     return db.query(models.UptimeMonitor).filter(
