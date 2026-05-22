@@ -40,7 +40,7 @@ app.add_middleware(
 # )
 # app.include_router(export_routers, prefix="/export", tags=["export"])
 app.include_router(uptime_keeper, prefix="/uptime", tags=["uptime"])
-app.include_router(account_router, prefix="/accounts", tags=["Accounts"])  # ← add this
+app.include_router(account_router, prefix="/accounts", tags=["Accounts"])
 
 
 @app.get("/", include_in_schema=False)

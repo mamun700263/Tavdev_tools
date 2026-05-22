@@ -24,7 +24,10 @@ router = APIRouter()
 @router.post("/register", response_model=AccountResponse)
 async def register(data: AccountCreate, db: Session = Depends(get_db)):
     account = crud.create_account(db, data)
-    await crud.send_email_verification(db, account)
+    try:
+        await crud.send_email_verification(db, account)
+    except Exception as e:
+        print(f"################\n{e}")
     return account
 
 
