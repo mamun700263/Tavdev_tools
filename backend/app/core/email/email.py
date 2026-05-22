@@ -9,7 +9,7 @@ async def send_verification_email(email: str, token: str):
     verify_url = f"{base_url}/verify?token={token}"
 
     params = {
-        "from": "Bestoolify <onboarding@resend.dev>",
+        "from": "TavDev <noreply@tavdev.com>",
         "to": [email],
         "subject": "Verify your email",
         "html": f"""

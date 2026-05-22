@@ -144,7 +144,6 @@ def delete_account(db: Session, account_id) -> dict:
     return {"message": f"Account {account_id} deleted"}
 
 
-# add this to app/accounts/crud.py
 
 from app.accounts.models.account import AccountStatus
 
