@@ -8,6 +8,7 @@ from pydantic import BaseModel, EmailStr, field_validator
 from app.accounts.models.account import AccountStatus, RoleEnum
 from app.accounts.schemas.admin import AdminProfileResponse
 from app.accounts.schemas.company_profile import CompanyProfileResponse
+
 # import profile schemas — these must be imported AFTER their files exist
 from app.accounts.schemas.user_profile import UserProfileResponse
 

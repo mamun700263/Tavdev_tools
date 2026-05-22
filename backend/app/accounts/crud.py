@@ -1,19 +1,24 @@
-# app/accounts/crud.py
-
 from datetime import datetime, timedelta, timezone
 
 from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from app.accounts.models import (Account, AdminProfile, CompanyProfile,
-                                 RoleEnum, UserProfile)
+from app.accounts.models import (
+    Account,
+    AdminProfile,
+    CompanyProfile,
+    RoleEnum,
+    UserProfile,
+)
 from app.accounts.schemas import AccountCreate
 
+from app.accounts.models.account import AccountStatus
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 import secrets
 from datetime import datetime, timedelta, timezone
+
 from app.core.email.email import send_verification_email
 
 
@@ -33,9 +38,7 @@ async def send_email_verification(db: Session, account: Account):
 
 def verify_email_token(db: Session, token: str) -> Account:
     # 1. find account with this token
-    account = db.query(Account).filter(
-        Account.verification_token == token
-    ).first()
+    account = db.query(Account).filter(Account.verification_token == token).first()
 
     if not account:
         raise HTTPException(status_code=400, detail="Invalid verification token")
@@ -122,6 +125,8 @@ def get_account_by_email(db: Session, email: str) -> Account:
 def get_all_accounts(db: Session) -> list[Account]:
     return db.query(Account).all()
 
+def get_all_account_count(db: Session) -> int:
+    return db.query(Account).count()
 
 # ── UPDATE ────────────────────────────────────────────────
 
@@ -143,9 +148,12 @@ def delete_account(db: Session, account_id) -> dict:
     db.commit()
     return {"message": f"Account {account_id} deleted"}
 
+def delete_account_self(db: Session, account) -> dict:
+    db.delete(account)
+    db.commit()
+    return {"message": f"Account {account.id} deleted"}
 
 
-from app.accounts.models.account import AccountStatus
 
 MAX_FAILED_ATTEMPTS = 5
 LOCK_DURATION_MINUTES = 15

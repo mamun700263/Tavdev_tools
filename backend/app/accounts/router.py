@@ -6,13 +6,18 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
 import app.accounts.crud as crud
-from app.accounts.auth import (create_access_token, create_refresh_token,
-                               decode_token)
-from app.accounts.dependencies import get_current_account
+from app.accounts.auth import create_access_token, create_refresh_token, decode_token
+from app.accounts.dependencies import get_current_account, get_current_admin
 from app.accounts.models import Account
 from app.accounts.models.account import AccountStatus
-from app.accounts.schemas import (AccountCreate, AccountLogin, AccountResponse,
-                                  AccountStatusUpdate, TokenRefresh)
+from app.accounts.schemas import (
+    AccountCreate,
+    AccountLogin,
+    AccountResponse,
+    AccountStatusUpdate,
+    TokenRefresh,
+)
+from app.accounts.schemas.account import PasswordResetRequest
 from app.db import get_db
 
 router = APIRouter()
@@ -64,8 +69,6 @@ def refresh(data: TokenRefresh, db: Session = Depends(get_db)):
         "token_type": "bearer",
     }
 
-from app.accounts.schemas.account import PasswordResetRequest
-
 
 # ── EMAIL VERIFICATION ────────────────────────────────────
 
@@ -88,6 +91,8 @@ async def send_verification(
 def verify_email(token: str, db: Session = Depends(get_db)):
     account = crud.verify_email_token(db, token)
     return {"message": "Email verified successfully", "email": account.email}
+
+
 # ── ACCOUNT — ME (must be before /{account_id}) ──────────
 
 
@@ -109,11 +114,16 @@ def update_my_status(
 
 
 @router.get("/", response_model=list[AccountResponse])
-def list_accounts(db: Session = Depends(get_db)):
+def list_accounts(db: Session = Depends(get_db),current_account: Account = Depends(get_current_account)):
     return crud.get_all_accounts(db)
 
+@router.get("/all_account_count", response_model=int)
+def count_accounts(db: Session = Depends(get_db)):
+    return crud.get_all_account_count(db)
 
-@router.get("/{account_id}", response_model=AccountResponse)
+
+
+@router.get("/{account_id:uuid}", response_model=AccountResponse)
 def get_account(account_id: UUID, db: Session = Depends(get_db)):
     return crud.get_account_by_id(db, account_id)
 
@@ -127,6 +137,12 @@ def update_status(
     return crud.update_account_status(db, account_id, data.status)
 
 
-@router.delete("/{account_id}")
-def delete_account(account_id: UUID, db: Session = Depends(get_db)):
+@router.delete("/delete_account")
+def delete_account(db: Session = Depends(get_db),current_account: Account = Depends(get_current_account)):
+    return crud.delete_account(db, current_account)
+
+@router.delete("/admin/{account_id}")
+def delete_account(account_id: UUID, db: Session = Depends(get_db),current_account: Account = Depends(get_current_admin)):
     return crud.delete_account(db, account_id)
+
+

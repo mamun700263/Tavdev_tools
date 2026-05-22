@@ -8,7 +8,7 @@ from sqlalchemy import Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 
-from app.db.base  import Base
+from app.db.base import Base
 
 
 class RoleEnum(str, Enum):
