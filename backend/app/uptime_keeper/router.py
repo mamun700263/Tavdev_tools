@@ -68,7 +68,12 @@ def list_monitors(account_id, db: Session = Depends(get_db)):
 
 
 @router.patch("/monitors/{monitor_id}", response_model=schemas.UptimeMonitorOut)
-def update_monitor(monitor_id, payload: schemas.UptimeMonitorUpdate, db: Session = Depends(get_db)):
+def update_monitor(
+    monitor_id,
+    payload: schemas.UptimeMonitorUpdate,
+    db: Session = Depends(get_db),
+    account:Account = Depends(get_current_account)
+    ):
     obj = crud.update_monitor(db, monitor_id, payload)
     if not obj:
         raise HTTPException(status_code=404, detail="Monitor not found")
@@ -76,7 +81,11 @@ def update_monitor(monitor_id, payload: schemas.UptimeMonitorUpdate, db: Session
 
 
 @router.delete("/monitors/{monitor_id}")
-def delete_monitor(monitor_id, db: Session = Depends(get_db)):
+def delete_monitor(
+    monitor_id,
+    db: Session = Depends(get_db),
+    account:Account = Depends(get_current_account)
+    ):
     obj = crud.delete_monitor(db, monitor_id)
     if not obj:
         raise HTTPException(status_code=404, detail="Monitor not found")
