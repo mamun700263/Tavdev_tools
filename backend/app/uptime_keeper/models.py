@@ -27,7 +27,7 @@ class UptimeMonitor(Base):
     updated_at         = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # relationships
-    account = relationship("Account")  # optional
+    account = relationship("Account")
     pings = relationship(
         "UptimePing",
         back_populates="monitor",

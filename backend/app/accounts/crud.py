@@ -141,13 +141,14 @@ def update_account_status(db: Session, account_id, status) -> Account:
 
 # ── DELETE ────────────────────────────────────────────────
 
-
+#for admin
 def delete_account(db: Session, account_id) -> dict:
     account = get_account_by_id(db, account_id)
     db.delete(account)
     db.commit()
     return {"message": f"Account {account_id} deleted"}
 
+#for users
 def delete_account_self(db: Session, account) -> dict:
     db.delete(account)
     db.commit()

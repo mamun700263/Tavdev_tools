@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.uptime_keeper import crud, schemas
-
+from app.accounts.models import Account
+from app.accounts.dependencies import get_current_account, get_current_admin
 from .ping import ping
 
 router = APIRouter()
@@ -39,9 +40,14 @@ async def test_ping(
 # MONITORS
 # ------------------------
 
+#post a new monitor
 @router.post("/monitors", response_model=schemas.UptimeMonitorOut)
-def create_monitor(payload: schemas.UptimeMonitorCreate, db: Session = Depends(get_db)):
-    return crud.create_monitor(db, payload)
+def create_monitor(
+    payload: schemas.UptimeMonitorCreate,
+    db: Session = Depends(get_db),
+    account:Account = Depends(get_current_account)
+    ):
+    return crud.create_monitor(db, payload,account)
 
 
 @router.get("/monitors/{monitor_id}", response_model=schemas.UptimeMonitorOut)
@@ -51,6 +57,7 @@ def get_monitor(monitor_id, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Monitor not found")
     return obj
 
+#count the number of monitors
 @router.get("/motinor_count/", response_model=int)
 def get_monitor_count(db:Session=Depends(get_db)):
     return crud.count_monitors(db)

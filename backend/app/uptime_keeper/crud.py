@@ -1,14 +1,15 @@
 from sqlalchemy.orm import Session
 from app.uptime_keeper import models, schemas
-
+from app.accounts.models import Account
 
 # ------------------------
 # Uptime Monitor CRUD
 # ------------------------
 
-def create_monitor(db: Session, data: schemas.UptimeMonitorCreate):
+def create_monitor(db: Session, data: schemas.UptimeMonitorCreate, account: Account):
     payload = data.model_dump()
     payload["url"] = str(payload["url"])
+    payload["account_id"]=account.id
     obj = models.UptimeMonitor(**payload)
     db.add(obj)
     db.commit()

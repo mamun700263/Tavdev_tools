@@ -15,7 +15,8 @@ class UptimeMonitorBase(BaseModel):
 
 
 class UptimeMonitorCreate(UptimeMonitorBase):
-    account_id: uuid.UUID
+    # account_id: uuid.UUID
+    pass
 
 
 class UptimeMonitorUpdate(BaseModel):
