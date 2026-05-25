@@ -62,8 +62,6 @@ RUN playwright install --with-deps
 
 COPY . /app
 
-# Copy and make the start script executable
-COPY . /app
 
 EXPOSE 10000
 
