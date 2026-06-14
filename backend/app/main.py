@@ -8,7 +8,7 @@ from app.accounts.router import router as account_router
 from app.core.data_exporters.export_routers import router as export_routers
 from app.db.base  import Base
 from app.db.engine import engine
-from app.scrapers.google_map.router import router as google_map_scrapper_router
+# from app.scrapers.google_map.router import router as google_map_scrapper_router
 from app.uptime_keeper.router import router as uptime_keeper
 from app.uptime_keeper.task_manager import lifespan
 

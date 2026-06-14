@@ -24,6 +24,9 @@ class AccountStatus(str, Enum):
     DELETED = "deleted"
     LOCKED = "locked"
 
+class AuthProvider(str, Enum):
+    LOCAL = "local"
+    GOOGLE = "google"
 
 class Account(Base):
     __tablename__ = "accounts"
@@ -94,6 +97,15 @@ class Account(Base):
         uselist=False,
         cascade="all, delete-orphan",
     )
+    # Auth provider 
+    auth_provider = Column(
+    SAEnum(AuthProvider, name="auth_provider_enum"),
+    default=AuthProvider.LOCAL,
+    nullable=False,
+    index=True
+    )
+
+    google_sub = Column(String(255), nullable=True, unique=True, index=True)
 
     # handy string representation
     def __repr__(self):
