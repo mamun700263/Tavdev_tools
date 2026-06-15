@@ -105,7 +105,12 @@ class Account(Base):
     index=True
     )
 
-    google_sub = Column(String(255), nullable=True, unique=True, index=True)
+    google_sub = Column(
+    String(255),
+    nullable=True,
+    unique=True,
+    index=True,
+    )
 
     # handy string representation
     def __repr__(self):
