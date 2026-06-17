@@ -49,18 +49,20 @@ def login(data: AccountLogin, request: Request, db: Session = Depends(get_db)):
 @router.post("/refresh")
 def refresh(data: TokenRefresh, db: Session = Depends(get_db)):
     payload = decode_token(data.refresh_token)
+    print("$$$$$$$$$$$$$$$$")
 
     if payload.get("type") != "refresh":
+        print("Refresh")
         raise HTTPException(status_code=401, detail="Invalid token type")
-
+    
     account_id = payload.get("sub")
     if not account_id:
         raise HTTPException(status_code=401, detail="Invalid token")
-
+    print("Right token")
     account = db.get(Account, account_id)
     if not account:
         raise HTTPException(status_code=401, detail="Account not found")
-
+    print("Account Found")
     if account.status != AccountStatus.ACTIVE:
         raise HTTPException(status_code=403, detail=f"Account is {account.status}")
 
@@ -164,7 +166,6 @@ def google_callback(
     email_verified = google_user.get("email_verified", False)
 
     account = db.query(Account).filter(Account.email == email).first()
-
     if account:
         # mismatch protection
         if account.google_sub and account.google_sub != google_sub:
@@ -190,27 +191,36 @@ def google_callback(
     db.refresh(account)
 
     access_token = create_access_token(account.id, account.role)
-    refresh_token = create_refresh_token(account.id, account.role)
+    refresh_token = create_refresh_token(account.id)
+    from urllib.parse import urlencode
 
-    response = RedirectResponse(url="http://localhost:3000/dashboard")
+    params = urlencode({
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+    })
 
-    response.set_cookie(
-        key="access_token",
-        value=access_token,
-        httponly=True,
-        secure=False,  # True in production (HTTPS)
-        samesite="lax",
+    return RedirectResponse(
+        url=f"{os.getenv('FRONTEND_URL_REDIRECT_URL')}?{params}"
     )
+    # response = RedirectResponse(url=os.getenv("FRONTEND_URL_REDIRECT_URL"),)
 
-    response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        httponly=True,
-        secure=False,
-        samesite="lax",
-    )
+    # response.set_cookie(
+    #     key="access_token",
+    #     value=access_token,
+    #     httponly=True,
+    #     secure=False,  # True in production (HTTPS)
+    #     samesite="lax",
+    # )
 
-    return response
+    # response.set_cookie(
+    #     key="refresh_token",
+    #     value=refresh_token,
+    #     httponly=True,
+    #     secure=False,
+    #     samesite="lax",
+    # )
+
+    # return response
 # ── EMAIL VERIFICATION ────────────────────────────────────
 
 
