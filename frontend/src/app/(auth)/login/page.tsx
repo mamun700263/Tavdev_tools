@@ -72,9 +72,26 @@ export default function LoginPage() {
             className="w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
+
           </button>
         </form>
 
+      <button
+        type="button"
+        onClick={() => {
+          window.location.href =
+            `${process.env.NEXT_PUBLIC_API_URL}/accounts/auth/google/login`;
+        }}
+        className="w-full border border-gray-300 bg-white text-gray-700 my-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center justify-center gap-2"
+      >
+        <img
+          src="/google.png"
+          alt="Google"
+          className="w-5 h-5"
+        />
+        Continue with Google
+      </button>
+                
         <p className="text-sm text-gray-500 mt-4 text-center">
           Don't have an account?{" "}
           <a href="/register" className="text-blue-600 hover:underline">Register</a>
