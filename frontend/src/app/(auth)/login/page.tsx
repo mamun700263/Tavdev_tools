@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
 
+import GoogleLoginButton from "@/components/buttons/google_auth_button";
 export default function LoginPage() {
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
@@ -76,21 +77,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-      <button
-        type="button"
-        onClick={() => {
-          window.location.href =
-            `${process.env.NEXT_PUBLIC_API_URL}/accounts/auth/google/login`;
-        }}
-        className="w-full border border-gray-300 bg-white text-gray-700 my-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center justify-center gap-2"
-      >
-        <img
-          src="/google.png"
-          alt="Google"
-          className="w-5 h-5"
-        />
-        Continue with Google
-      </button>
+        <div>
+          <GoogleLoginButton />
+        </div>
                 
         <p className="text-sm text-gray-500 mt-4 text-center">
           Don't have an account?{" "}

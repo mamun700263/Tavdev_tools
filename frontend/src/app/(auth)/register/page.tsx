@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-
+import GoogleLoginButton from "@/components/buttons/google_auth_button";
 export default function RegisterPage() {
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
@@ -78,7 +78,10 @@ export default function RegisterPage() {
             {loading ? "Creating account..." : "Register"}
           </button>
         </form>
-
+        <div>
+          <GoogleLoginButton />
+        </div>
+                
         <p className="text-sm text-gray-500 mt-4 text-center">
           Already have an account?{" "}
           <a href="/login" className="text-blue-600 hover:underline">Login</a>
