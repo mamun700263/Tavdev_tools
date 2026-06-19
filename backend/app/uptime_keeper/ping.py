@@ -2,8 +2,17 @@ import httpx
 from datetime import datetime, timezone
 
 
+def normalize_url(url: str) -> str:
+    url = url.strip()
+
+    if not url.startswith(("http://", "https://")):
+        url = f"https://{url}"
+
+    return url
+
 async def ping(url: str) -> dict:
     checked_at = datetime.now(timezone.utc)
+    url = normalize_url(url)
     try:
         async with httpx.AsyncClient() as client:
             start = datetime.now(timezone.utc)
