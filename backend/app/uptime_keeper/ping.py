@@ -24,8 +24,7 @@ async def ping(url: str) -> dict:
             )
 
             redirect_count = len(r.history)
-
-            return {
+            st = {
                 # LAYER A: availability
                 "is_up": True,
                 "status_code": r.status_code,
@@ -47,6 +46,7 @@ async def ping(url: str) -> dict:
                 "checked_at": checked_at,
                 "error_message": None,
             }
+            return st
 
     except Exception as e:
         return {
