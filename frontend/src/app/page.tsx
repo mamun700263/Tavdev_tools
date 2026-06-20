@@ -15,27 +15,6 @@ export default function LandingPage() {
       {/* Glow */}
       <div className="fixed top-[-20%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-emerald-500 opacity-[0.06] blur-[120px] pointer-events-none" />
 
-      {/* Nav */}
-      <nav className="relative z-10 flex justify-between items-center px-8 py-6 max-w-6xl mx-auto">
-        <span className="text-sm font-mono font-bold tracking-widest text-white uppercase">
-          TavDev
-        </span>
-        <div className="flex items-center gap-6">
-          <Link
-            href="/login"
-            className="text-sm text-zinc-400 hover:text-white transition-colors"
-          >
-            Login
-          </Link>
-          <Link
-            href="/register"
-            className="text-sm bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-zinc-200 transition-colors"
-          >
-            Get started
-          </Link>
-        </div>
-      </nav>
-
       {/* Hero */}
       <section className="relative z-10 max-w-6xl mx-auto px-8 pt-24 pb-32">
         {/* Badge */}
@@ -135,7 +114,7 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="relative z-10 max-w-6xl mx-auto px-8 pb-32">
-        <div className="border border-zinc-800 rounded-2xl p-12 text-center bg-[#0d0d0d] relative overflow-hidden">
+        {/* <div className="border border-zinc-800 rounded-2xl p-12 text-center bg-[#0d0d0d] relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 to-transparent" />
           <h2 className="text-4xl font-black tracking-tight mb-4 relative z-10">
             Start monitoring in 60 seconds.
@@ -149,7 +128,29 @@ export default function LandingPage() {
           >
             Create free account →
           </Link>
-        </div>
+        </div> */}
+        <div className="flex items-center gap-4">
+      <Link
+        href="/test"
+        className="bg-white text-black px-6 py-3 rounded-md font-semibold text-sm hover:bg-zinc-200 transition-colors"
+      >
+        Try API instantly →
+      </Link>
+
+      <Link
+        href="/register"
+        className="text-zinc-400 text-sm hover:text-white transition-colors"
+      >
+        Create account
+      </Link>
+
+      <Link
+        href="/leaderboard"
+        className="text-zinc-500 text-sm hover:text-white transition-colors"
+      >
+        View leaderboard
+      </Link>
+    </div>
       </section>
 
       {/* Footer */}
