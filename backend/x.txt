@@ -1,0 +1,88 @@
+
+md-abdullah-all-mamun@TABBY:~/Development/my_code/programming/robin_hood_ship/PLAYWRITE/backend$ python3 app/uptime_keeper/ping.py 
+__class__: <class 'httpx.Response'>
+__delattr__: <method-wrapper '__delattr__' of Response object at 0x7d68af2b46e0>
+__dict__: {'status_code': 301, 'headers': Headers({'location': 'https://www.google.com/', 'content-type': 'text/html; charset=UTF-8', 'content-security-policy-report-only': "object-src 'none';base-uri 'self';script-src 'nonce-s3eI-xgumO0sxC7q8ELkuA' 'strict-dynamic' 'report-sample' 'unsafe-eval' 'unsafe-inline' https: http:;report-uri https://csp.withgoogle.com/csp/gws/other-hp", 'date': 'Sat, 20 Jun 2026 07:20:33 GMT', 'expires': 'Mon, 20 Jul 2026 07:20:33 GMT', 'cache-control': 'public, max-age=2592000', 'server': 'gws', 'content-length': '220', 'x-xss-protection': '0', 'x-frame-options': 'SAMEORIGIN', 'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'}), '_request': <Request('GET', 'https://google.com')>, 'next_request': <Request('GET', 'https://www.google.com/')>, 'extensions': {'http_version': b'HTTP/1.1', 'reason_phrase': b'Moved Permanently', 'network_stream': <httpcore._backends.anyio.AnyIOStream object at 0x7d68af56fd90>}, 'history': [], 'is_closed': True, 'is_stream_consumed': True, 'default_encoding': 'utf-8', 'stream': <httpx._client.BoundAsyncStream object at 0x7d68af42cd70>, '_num_bytes_downloaded': 220, '_decoder': <httpx._decoders.IdentityDecoder object at 0x7d68af2b4980>, '_elapsed': datetime.timedelta(microseconds=79160), '_content': b'<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">\n<TITLE>301 Moved</TITLE></HEAD><BODY>\n<H1>301 Moved</H1>\nThe document has moved\n<A HREF="https://www.google.com/">here</A>.\r\n</BODY></HTML>\r\n'}
+__dir__: <built-in method __dir__ of Response object at 0x7d68af2b46e0>
+__doc__: None
+__eq__: <method-wrapper '__eq__' of Response object at 0x7d68af2b46e0>
+__format__: <built-in method __format__ of Response object at 0x7d68af2b46e0>
+__ge__: <method-wrapper '__ge__' of Response object at 0x7d68af2b46e0>
+__getattribute__: <method-wrapper '__getattribute__' of Response object at 0x7d68af2b46e0>
+__getstate__: <bound method Response.__getstate__ of <Response [301 Moved Permanently]>>
+__gt__: <method-wrapper '__gt__' of Response object at 0x7d68af2b46e0>
+__hash__: <method-wrapper '__hash__' of Response object at 0x7d68af2b46e0>
+__init__: <bound method Response.__init__ of <Response [301 Moved Permanently]>>
+__init_subclass__: <built-in method __init_subclass__ of type object at 0x17c82420>
+__le__: <method-wrapper '__le__' of Response object at 0x7d68af2b46e0>
+__lt__: <method-wrapper '__lt__' of Response object at 0x7d68af2b46e0>
+__module__: httpx
+__ne__: <method-wrapper '__ne__' of Response object at 0x7d68af2b46e0>
+__new__: <built-in method __new__ of type object at 0xa12d80>
+__reduce__: <built-in method __reduce__ of Response object at 0x7d68af2b46e0>
+__reduce_ex__: <built-in method __reduce_ex__ of Response object at 0x7d68af2b46e0>
+__repr__: <bound method Response.__repr__ of <Response [301 Moved Permanently]>>
+__setattr__: <method-wrapper '__setattr__' of Response object at 0x7d68af2b46e0>
+__setstate__: <bound method Response.__setstate__ of <Response [301 Moved Permanently]>>
+__sizeof__: <built-in method __sizeof__ of Response object at 0x7d68af2b46e0>
+__static_attributes__: ('_content', '_cookies', '_decoder', '_elapsed', '_encoding', '_num_bytes_downloaded', '_request', '_text', 'default_encoding', 'extensions', 'headers', 'history', 'is_closed', 'is_stream_consumed', 'next_request', 'status_code', 'stream')
+__str__: <method-wrapper '__str__' of Response object at 0x7d68af2b46e0>
+__subclasshook__: <built-in method __subclasshook__ of type object at 0x17c82420>
+__weakref__: None
+_content: b'<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">\n<TITLE>301 Moved</TITLE></HEAD><BODY>\n<H1>301 Moved</H1>\nThe document has moved\n<A HREF="https://www.google.com/">here</A>.\r\n</BODY></HTML>\r\n'
+_decoder: <httpx._decoders.IdentityDecoder object at 0x7d68af2b4980>
+_elapsed: 0:00:00.079160
+_get_content_decoder: <bound method Response._get_content_decoder of <Response [301 Moved Permanently]>>
+_num_bytes_downloaded: 220
+_prepare: <bound method Response._prepare of <Response [301 Moved Permanently]>>
+_request: <Request('GET', 'https://google.com')>
+aclose: <bound method Response.aclose of <Response [301 Moved Permanently]>>
+aiter_bytes: <bound method Response.aiter_bytes of <Response [301 Moved Permanently]>>
+aiter_lines: <bound method Response.aiter_lines of <Response [301 Moved Permanently]>>
+aiter_raw: <bound method Response.aiter_raw of <Response [301 Moved Permanently]>>
+aiter_text: <bound method Response.aiter_text of <Response [301 Moved Permanently]>>
+aread: <bound method Response.aread of <Response [301 Moved Permanently]>>
+charset_encoding: utf-8
+close: <bound method Response.close of <Response [301 Moved Permanently]>>
+content: b'<HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">\n<TITLE>301 Moved</TITLE></HEAD><BODY>\n<H1>301 Moved</H1>\nThe document has moved\n<A HREF="https://www.google.com/">here</A>.\r\n</BODY></HTML>\r\n'
+cookies: <Cookies[]>
+default_encoding: utf-8
+elapsed: 0:00:00.079160
+encoding: utf-8
+extensions: {'http_version': b'HTTP/1.1', 'reason_phrase': b'Moved Permanently', 'network_stream': <httpcore._backends.anyio.AnyIOStream object at 0x7d68af56fd90>}
+has_redirect_location: True
+headers: Headers({'location': 'https://www.google.com/', 'content-type': 'text/html; charset=UTF-8', 'content-security-policy-report-only': "object-src 'none';base-uri 'self';script-src 'nonce-s3eI-xgumO0sxC7q8ELkuA' 'strict-dynamic' 'report-sample' 'unsafe-eval' 'unsafe-inline' https: http:;report-uri https://csp.withgoogle.com/csp/gws/other-hp", 'date': 'Sat, 20 Jun 2026 07:20:33 GMT', 'expires': 'Mon, 20 Jul 2026 07:20:33 GMT', 'cache-control': 'public, max-age=2592000', 'server': 'gws', 'content-length': '220', 'x-xss-protection': '0', 'x-frame-options': 'SAMEORIGIN', 'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'})
+history: []
+http_version: HTTP/1.1
+is_client_error: False
+is_closed: True
+is_error: False
+is_informational: False
+is_redirect: True
+is_server_error: False
+is_stream_consumed: True
+is_success: False
+iter_bytes: <bound method Response.iter_bytes of <Response [301 Moved Permanently]>>
+iter_lines: <bound method Response.iter_lines of <Response [301 Moved Permanently]>>
+iter_raw: <bound method Response.iter_raw of <Response [301 Moved Permanently]>>
+iter_text: <bound method Response.iter_text of <Response [301 Moved Permanently]>>
+json: <bound method Response.json of <Response [301 Moved Permanently]>>
+links: {}
+next_request: <Request('GET', 'https://www.google.com/')>
+num_bytes_downloaded: 220
+raise_for_status: <bound method Response.raise_for_status of <Response [301 Moved Permanently]>>
+read: <bound method Response.read of <Response [301 Moved Permanently]>>
+reason_phrase: Moved Permanently
+request: <Request('GET', 'https://google.com')>
+status_code: 301
+stream: <httpx._client.BoundAsyncStream object at 0x7d68af42cd70>
+text: <HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
+<TITLE>301 Moved</TITLE></HEAD><BODY>
+<H1>301 Moved</H1>
+The document has moved
+<A HREF="https://www.google.com/">here</A>.
+</BODY></HTML>
+
+url: https://google.com
+{'is_up': True, 'status_code': 301, 'response_time_ms': 84, 'error_message': None, 'checked_at': datetime.datetime(2026, 6, 20, 7, 20, 33, 772203, tzinfo=datetime.timezone.utc)}
+md-abdullah-all-mamun@TABBY:~/Development/my_code/programming/robin_hood_ship/PLAYWRITE/backend$ 
