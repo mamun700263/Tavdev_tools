@@ -1,5 +1,4 @@
-# app/accounts/schemas/account.py
-
+import string
 from datetime import datetime
 from uuid import UUID
 
@@ -28,12 +27,18 @@ class AccountCreate(BaseModel):
     @field_validator("password")
     @classmethod
     def password_strength(cls, v):
-        if len(v) < 8:
-            raise ValueError("Password must be at least 8 characters")
+        if len(v) < 9:
+            raise ValueError("Password must be at least 9 characters")
         if not any(c.isupper() for c in v):
             raise ValueError("Password must contain at least one uppercase letter")
+        if not any(c.islower() for c in v):
+            raise ValueError("Password must contain at least one lowercase letter")
         if not any(c.isdigit() for c in v):
             raise ValueError("Password must contain at least one number")
+        if not any(c in string.punctuation for c in v):
+            raise ValueError(
+                "Password must contain at least one special character"
+            )
         return v
 
 
