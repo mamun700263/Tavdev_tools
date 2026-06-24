@@ -31,6 +31,16 @@ async def test_ping(
     - Returns `reachable: false` if the host is down or times out
     """
     result = await ping(url)
+    try:
+        from app.core.data_exporters import GoogleSheetPusher
+        sheet= GoogleSheetPusher('Tavdev Monitor')
+        result["base_url"] = url
+        checked_at = result['checked_at']
+        result["checked_at"] = checked_at.isoformat()
+        sheet.append_row(result, "passed")
+    except Exception as e:
+        print("GOOGLE SHEET ERROR:", repr(e))
+        raise
     return result
 
 
