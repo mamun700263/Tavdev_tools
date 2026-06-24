@@ -2,6 +2,11 @@ import httpx
 from datetime import datetime, timezone
 
 
+
+
+
+
+
 async def normalize_url(url: str) -> str:
     url = url.strip()
     if not url.startswith(("http://", "https://")):
@@ -46,14 +51,29 @@ async def ping(url: str) -> dict:
                 "checked_at": checked_at,
                 "error_message": None,
             }
+            try:
+                from app.core.data_exporters import GoogleSheetPusher
+                sheet= GoogleSheetPusher('Tavdev Monitor')
+                st["base_url"] = url
+                st["checked_at"] = checked_at.isoformat()
+                sheet.append_row(st, "passed")
+            except Exception as e:
+                print("GOOGLE SHEET ERROR:", repr(e))
+                raise
             return st
 
-    except Exception as e:
-        return {
-            "is_up": False,
-            "status_code": None,
-            "response_time_ms": None,
-            "error_type": "timeout" | "dns_failure" | "connection_refused" | "ssl_error" | "http_error" | None,
-            "checked_at": checked_at,
-        }
+    except httpx.TimeoutException:
+        error_type = "timeout"
+    except httpx.ConnectError:
+        error_type = "connection_refused"
+    except Exception:
+        error_type = "http_error"
     
+    return {
+        "is_up": False,
+        "status_code": None,
+        "response_time_ms": None,
+        "error_type": None,
+        "checked_at": checked_at,
+    }
+
