@@ -2,8 +2,8 @@ import redis
 import os
 
 redis_client = redis.Redis(
-    host=os.getenv("REDIS_HOST"),
-    port=int(os.getenv("REDIS_PORT", 6379)),
-    db=int(os.getenv("REDIS_DB", 0)),
+    host=os.getenv("CACHE_URL"),
+    # port=int(os.getenv("REDIS_PORT", 6379)),
+    # db=int(os.getenv("REDIS_DB", 0)),
     decode_responses=True
 )
