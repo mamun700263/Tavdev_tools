@@ -2,9 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
+
+  // null = not yet checked (avoids hydration mismatch / flash of wrong state)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    setIsAuthenticated(!!token);
+  }, [pathname]); // re-check on route change, e.g. right after login redirects
 
   const navLink = (href: string) =>
     `text-sm transition-colors ${
@@ -17,16 +26,12 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-zinc-900 bg-[#080808]/80 backdrop-blur-xl">
       <nav className="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-3"
-        >
+        <Link href="/" className="flex items-center gap-3">
           <img
             src="/favicon.png"
             alt="TavDev"
             className="w-10 h-10 object-contain"
           />
-
           <span className="font-bold tracking-tight text-white">
             TavDev Monitor
           </span>
@@ -34,36 +39,43 @@ export default function Navbar() {
 
         {/* Center Navigation */}
         <div className="flex items-center gap-8">
-          <Link
-            href="/test"
-            className={navLink("/test")}
-          >
+          <Link href="/test" className={navLink("/test")}>
             Test API
           </Link>
 
-          <Link
-            href="/leaderboard"
-            className={navLink("/leaderboard")}
-          >
+          <Link href="/leaderboard" className={navLink("/leaderboard")}>
             Leaderboard
           </Link>
+
+          {isAuthenticated && (
+            <Link href="/dashboard" className={navLink("/dashboard")}>
+              Dashboard
+            </Link>
+          )}
         </div>
 
-        {/* CTA */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="text-sm text-zinc-500 hover:text-white transition-colors"
-          >
-            Login
-          </Link>
+        {/* CTA — only shown to unauthenticated users; logged-in users use the sidebar */}
+        <div className="flex items-center gap-3 min-w-[140px] justify-end">
+          {isAuthenticated === null ? (
+            // reserve space while we check, prevents layout shift
+            <div className="w-20 h-9" />
+          ) : isAuthenticated ? null : (
+            <>
+              <Link
+                href="/login"
+                className="text-sm text-zinc-500 hover:text-white transition-colors"
+              >
+                Login
+              </Link>
 
-          <Link
-            href="/register"
-            className="px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:bg-zinc-200 transition-colors"
-          >
-            Get Started
-          </Link>
+              <Link
+                href="/register"
+                className="px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold hover:bg-zinc-200 transition-colors"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </header>
