@@ -1,67 +1,104 @@
-import asyncio
+import asyncio,os
 from datetime import datetime, timezone
 
+from app.core.redis import redis_client
 from app.db.engine import SessionLocal
 from app.uptime_keeper.models import UptimeMonitor, UptimePing
-from app.uptime_keeper.ping import ping
-
-# tracks the last time each monitor was pinged
-# { monitor_id: datetime }
-_last_pinged: dict = {}
+from app.uptime_keeper.ping import ping,to_uptime_ping
 
 
-async def run_monitor(monitor: UptimeMonitor, db):
-    print(f"[uptime] pinging {monitor.name} → {monitor.url}", flush=True)
-    result = await ping(monitor.url)
+SCHEDULE_KEY =os.getenv('SCHEDULE_KEY')
 
-    ping_record = UptimePing(
-        monitor_id=monitor.id,
-        **result
-    )
-    db.add(ping_record)
-    db.commit()
-    print(f"[uptime] saved ping for {monitor.name} → up={result['is_up']}", flush=True)
 
-async def scheduler():   
+# -------------------------
+# SINGLE MONITOR EXECUTION
+# -------------------------
+async def handle_monitor(monitor_id: str):
+    db = SessionLocal()
+    try:
+        monitor = (
+            db.query(UptimeMonitor)
+            .filter(UptimeMonitor.id == monitor_id)
+            .first()
+        )
+
+        if not monitor or not monitor.is_active:
+            return
+
+        print(f"[uptime] pinging {monitor.name} → {monitor.url}", flush=True)
+
+        result = await ping(monitor.url)
+        result = to_uptime_ping(result)
+        db.add(
+            UptimePing(
+                monitor_id=monitor.id,
+                **result
+            )
+        )
+        db.commit()
+
+        # -------------------------
+        # RESCHEDULE (ONLY AFTER SUCCESSFUL EXECUTION)
+        # -------------------------
+        next_run = datetime.now(timezone.utc).timestamp() + (
+            monitor.interval_minutes * 60
+        )
+
+        redis_client.zadd(
+            SCHEDULE_KEY,
+            {str(monitor.id): next_run}
+        )
+
+    except Exception as e:
+        print(f"[uptime] monitor failed {monitor_id}: {repr(e)}")
+
+    finally:
+        db.close()
+
+
+# -------------------------
+# SCHEDULER LOOP
+# -------------------------
+async def scheduler():
+    print("[uptime] redis scheduler started", flush=True)
+
     while True:
-        url="https://api.tavdev.com"
-        result = await ping(url)
-        print(result)
+        try:
+            now_ts = datetime.now(timezone.utc).timestamp()
+            
+
+            # -----------------------------------
+            # ATOMIC CLAIM (prevents duplicates)
+            # -----------------------------------
+            due = redis_client.zrangebyscore(
+                SCHEDULE_KEY,
+                0,
+                now_ts
+            )
+
+            if not due:
+                print("[uptime] no monitors due")
+                await asyncio.sleep(30)
+                continue
+
+            # IMPORTANT: convert bytes → str
+            monitor_ids = [m for m in due]
+            print(monitor_ids)
+
+            # remove from schedule BEFORE execution (claiming step)
+            redis_client.zrem(SCHEDULE_KEY, *due)
+
+            print(f"[uptime] due monitors: {len(monitor_ids)}")
+
+            # run concurrently (safe now because DB sessions are isolated)
+            tasks = [
+                handle_monitor(monitor_id)
+                for monitor_id in monitor_ids
+            ]
+
+            await asyncio.gather(*tasks)
+
+        except Exception as e:
+            print("[uptime] scheduler error:", repr(e))
+
         await asyncio.sleep(30)
-
-# async def scheduler():
-#     print("[uptime] scheduler started", flush=True)
-
-#     while True:
-#         db = SessionLocal()
-#         try:
-#             now = datetime.now(timezone.utc)
-
-#             # pull all active monitors from DB
-#             monitors = db.query(UptimeMonitor).filter(
-#                 UptimeMonitor.is_active == True
-#             ).all()
-
-#             due = []
-#             for monitor in monitors:
-#                 last = _last_pinged.get(monitor.id)
-#                 interval_seconds = monitor.interval_minutes * 60
-
-#                 # ping if never pinged before, or interval has passed
-#                 if last is None or (now - last).total_seconds() >= interval_seconds:
-#                     due.append(monitor)
-#                     _last_pinged[monitor.id] = now
-
-#             if due:
-#                 print(f"[uptime] {len(due)} monitors due for ping", flush=True)
-#                 await asyncio.gather(*[run_monitor(m, db) for m in due])
-#             else:
-#                 print("[uptime] no monitors due", flush=True)
-
-#         except Exception as e:
-#             print(f"[uptime] scheduler error: {e}", flush=True)
-#         finally:
-#             db.close()
-
-#         # check every 30 seconds
-#         await asyncio.sleep(30)
