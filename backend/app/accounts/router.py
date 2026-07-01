@@ -43,13 +43,17 @@ def login(data: AccountLogin, request: Request, db: Session = Depends(get_db)):
         "access_token": create_access_token(account.id, account.role),
         "refresh_token": create_refresh_token(account.id),
         "token_type": "bearer",
+        "account": {
+            "id": account.id,
+            "email": account.email,
+            "role": account.role,
+            "status": account.status,
+        },
     }
-
 
 @router.post("/refresh")
 def refresh(data: TokenRefresh, db: Session = Depends(get_db)):
     payload = decode_token(data.refresh_token)
-    print("$$$$$$$$$$$$$$$$")
 
     if payload.get("type") != "refresh":
         print("Refresh")
@@ -58,7 +62,6 @@ def refresh(data: TokenRefresh, db: Session = Depends(get_db)):
     account_id = payload.get("sub")
     if not account_id:
         raise HTTPException(status_code=401, detail="Invalid token")
-    print("Right token")
     account = db.get(Account, account_id)
     if not account:
         raise HTTPException(status_code=401, detail="Account not found")
@@ -69,6 +72,12 @@ def refresh(data: TokenRefresh, db: Session = Depends(get_db)):
     return {
         "access_token": create_access_token(account.id, account.role),
         "token_type": "bearer",
+        "account": {
+            "id": account.id,
+            "email": account.email,
+            "role": account.role,
+            "status": account.status,
+        },
     }
 ## +++++ GOOGLE AUTH ++++++++++++++++++++
 from fastapi import APIRouter

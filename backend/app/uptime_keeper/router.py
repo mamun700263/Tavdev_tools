@@ -2,9 +2,10 @@ from fastapi import APIRouter, Query
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.db import get_db
-from app.uptime_keeper import crud, schemas
 from app.accounts.models import Account
+from app.db import get_db
+from app.core.redis import redis_client
+from app.uptime_keeper import crud, schemas
 from app.accounts.dependencies import get_current_account, get_current_admin
 from .ping import ping
 
@@ -109,3 +110,9 @@ def delete_monitor(
 @router.get("/monitors/{monitor_id}/pings", response_model=list[schemas.UptimePingOut])
 def list_pings(monitor_id, db: Session = Depends(get_db)):
     return crud.get_pings_by_monitor(db, monitor_id)
+
+
+@router.get("/redis-test")
+def redis_test():
+    redis_client.set("ping", "pong")
+    return redis_client.get("ping")

@@ -9,11 +9,20 @@ from app.accounts.models import Account
 def create_monitor(db: Session, data: schemas.UptimeMonitorCreate, account: Account):
     payload = data.model_dump()
     payload["url"] = str(payload["url"])
-    payload["account_id"]=account.id
+    payload["account_id"] = account.id
+
     obj = models.UptimeMonitor(**payload)
+
     db.add(obj)
     db.commit()
     db.refresh(obj)
+
+    # --------------------
+    # Redis sync (event)
+    # --------------------
+    from app.uptime_keeper.caching.db_to_redis import sync_monitor_to_redis
+    sync_monitor_to_redis(obj)
+
     return obj
 
 def count_monitors(db: Session):
@@ -41,6 +50,13 @@ def update_monitor(db: Session, monitor_id, data: schemas.UptimeMonitorUpdate):
 
     db.commit()
     db.refresh(obj)
+
+    # --------------------
+    # Redis sync (event)
+    # --------------------
+    from app.uptime_keeper.caching.db_to_redis import sync_monitor_to_redis
+    sync_monitor_to_redis(obj)
+
     return obj
 
 
@@ -51,6 +67,15 @@ def delete_monitor(db: Session, monitor_id):
 
     db.delete(obj)
     db.commit()
+
+    # --------------------
+    # Redis cleanup (event)
+    # --------------------
+    from app.core.redis import redis_client
+
+    key = f"uptime:monitor:{monitor_id}"
+    redis_client.delete(key)
+
     return obj
 
 
@@ -60,9 +85,28 @@ def delete_monitor(db: Session, monitor_id):
 
 def create_ping(db: Session, data: schemas.UptimePingCreate):
     obj = models.UptimePing(**data.model_dump())
+
     db.add(obj)
     db.commit()
     db.refresh(obj)
+
+    # --------------------
+    # Redis runtime update
+    # --------------------
+    from app.core.redis import redis_client
+    import json
+
+    key = f"uptime:monitor:{obj.monitor_id}"
+
+    cached = redis_client.get(key)
+
+    if cached:
+        cached = json.loads(cached)
+
+        cached["last_pinged"] = obj.checked_at.isoformat()
+
+        redis_client.set(key, json.dumps(cached))
+
     return obj
 
 

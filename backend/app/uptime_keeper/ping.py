@@ -2,17 +2,11 @@ import httpx
 from datetime import datetime, timezone
 
 
-
-
-
-
-
 async def normalize_url(url: str) -> str:
     url = url.strip()
     if not url.startswith(("http://", "https://")):
         url = f"https://{url}"
     return url
-
 
 async def ping(url: str) -> dict:
     checked_at = datetime.now(timezone.utc)
@@ -68,3 +62,16 @@ async def ping(url: str) -> dict:
         "checked_at": checked_at,
     }
 
+def to_uptime_ping(result: dict) -> dict:
+    """
+    Maps full ping telemetry → DB persistence schema.
+    No mutation of input. No side effects.
+    """
+
+    return {
+        "is_up": result["is_up"],
+        "status_code": result.get("status_code"),
+        "response_time_ms": result.get("response_time_ms"),
+        "error_message": result.get("error_message"),
+        "checked_at": result.get("checked_at"),
+    }
